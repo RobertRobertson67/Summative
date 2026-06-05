@@ -18,7 +18,6 @@ public class Villager extends Person{
     }
     
     public void displayInfo(PApplet p){
-       app.fill(0);
        app.text("Name: " + name, x, y - 50);
        app.text("HP: " + health, x, y - 30);
        app.text("Speed: " + speed, x, y - 10);

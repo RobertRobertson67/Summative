@@ -11,15 +11,11 @@ import processing.core.PImage;
  *
  * @author andrewchow
  */
-public class Image_Class {
-    public int x, y;
-    public PApplet app;
+public class Image_Class extends Person{
     public PImage image;
     
     public Image_Class(PApplet p, int x, int y, String imagePath){
-        this.app = p;
-        this.x = x;
-        this.y = y;
+        super(p, x, y, "Crop", 1, 0, imagePath);
         this.image = app.loadImage( imagePath );
     }
 
