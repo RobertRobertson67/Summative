@@ -16,6 +16,9 @@ public class MySketch extends PApplet {
     PImage menu_image;
     PImage Scene1_Back;
     PImage Storage_Room_Back;
+    PImage Middle_Town;
+    PImage Defeat_Villager;
+    PImage Destroy_Back;
     private Image_Class Soy;
     private Image_Class Cabbage;
     private Image_Class Pepper;
@@ -43,6 +46,9 @@ public class MySketch extends PApplet {
     menu_image = loadImage("images/Menu_Back.png");
     Scene1_Back = loadImage("images/Scene1_Back.png");
     Arrow = new Image_Class(this, 440, 170, "images/Arrow.png");
+    Middle_Town = loadImage("images/Middle_Town.png");
+    Defeat_Villager = loadImage("images/Defeat_Villager.png");
+    Destroy_Back = loadImage("images/Destroy_Back.png");
     
     Arrow_Wheat = new Image_Class(this, 110, 275, "images/Arrow.png");
     Arrow_Bamboo = new Image_Class(this, 450, 380, "images/Arrow.png");
@@ -58,8 +64,7 @@ public class MySketch extends PApplet {
     Bamboo = new Image_Class(this, 200, 470, "images/Bamboo.png");
     Wheat = new Image_Class(this, 315, 350, "images/Wheat.png");
     
-    
-    nian = new Nian(this, 20, 30, "Nian", 1000, 10, "images/Nian.png", 10);
+    nian = new Nian(this, 20, 30, "Nian", 10000, 10, "images/Nian.png", 10);
   }
   
   public void keyPressed(){
@@ -67,7 +72,7 @@ public class MySketch extends PApplet {
         if (keyCode == ENTER){
             stage = 1;
             String name = userInput;
-            villager = new Villager(this, 280, 500, name, 50, 10, "images/Villager.png", 100);
+            villager = new Villager(this, 280, 500, name, 2000, 10, "images/Villager.png", 100);
         } else if (key != CODED){
             userInput += key;
         }
@@ -178,12 +183,87 @@ public class MySketch extends PApplet {
             Arrow.y = 500;
             Arrow.draw();
             if (villager.isCollidingWith(Arrow)){
-//                villager.x = 270;
-//                villager.y = 500;
+                villager.x = 440;
+                villager.y = 170;
                 stage = 3;
             }
         }
         
+    } else if (stage == 3){
+        background(Scene1_Back);
+        villager.draw();
+        Arrow.x = 20;
+        Arrow.y = 20;
+        Arrow.draw();
+        if (villager.isCollidingWith(Arrow)){
+                villager.x = 270;
+                villager.y = 500;
+                nian.x = 230;
+                nian.y = 700;
+                stage = 4;
+            }
+        
+    } else if (stage == 4){
+        background(Middle_Town);
+        nian.draw();
+        nian.move(0, -3);
+        if (nian.x == 230 && nian.y <= 100){
+            nian.x = 230;
+            nian.y = 100;
+            villager.x = 270;
+            villager.y = 500;
+            stage = 5;
+        }
+    } else if (stage == 5){
+        background(Middle_Town);
+        nian.draw();
+        villager.draw();
+        int chaseSpeed = 2;
+        int NianX = 3;
+        int NianY = 3;
+        fill(255, 255, 255);
+        textSize(50);
+        text("Villager HP: " + villager.health, 50, 50);
+    
+        if (nian.x < villager.x) {
+            NianX = chaseSpeed;
+        } else if (nian.x > villager.x) {
+            NianX = -chaseSpeed;
+        }
+
+        if (nian.y < villager.y) {
+            NianY = chaseSpeed;
+        } else if (nian.y > villager.y) {
+            NianY = -chaseSpeed;
+        }
+        
+        nian.move(NianX, NianY);
+        
+        if (villager.isCollidingWith(nian)){
+            villager.health -= 10;
+        } 
+        
+        if (villager.health <= 0){
+            String name = userInput;
+            villager.image = Defeat_Villager;
+            chaseSpeed = 0;
+            nian.move(0, 5);
+        }
+        
+        if (nian.y > 700){
+            stage = 6;
+            nian.y = 170;
+            nian.x = 0;
+        }
+    } else if (stage == 6){
+        background(Scene1_Back);
+        nian.draw();
+        nian.move(5, 0);
+        if (nian.x >= 440){
+            stage = 7;
+        }
+    } else if (stage == 7){
+        background(Destroy_Back);
     }
 
     if (keyPressed) {

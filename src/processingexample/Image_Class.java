@@ -15,11 +15,18 @@ public class Image_Class extends Person{
     public PImage image;
     
     public Image_Class(PApplet p, int x, int y, String imagePath){
-        super(p, x, y, "Crop", 1, 0, imagePath);
+        super(p, x, y, "Thing", 1, 0, imagePath);
         this.image = app.loadImage( imagePath );
     }
-
+    
+    public void move(int dx, int dy){
+        x += dx;
+        y += dy;
+    }
+    
     public void draw(){
         app.image(image, x, y);
     }
+    
+    
 }
