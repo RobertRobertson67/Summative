@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package processingexample;
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -19,6 +22,9 @@ public class MySketch extends PApplet {
     PImage Middle_Town;
     PImage Defeat_Villager;
     PImage Destroy_Back;
+    PImage CutScene_Back;
+    PImage Normal_Villager;
+    private Image_Class Right_Arrow;
     private Image_Class Soy;
     private Image_Class Cabbage;
     private Image_Class Pepper;
@@ -32,6 +38,7 @@ public class MySketch extends PApplet {
     private Image_Class Arrow_Hay;
     private Image_Class Arrow_Soy;
     private Image_Class Arrow_Cabbage;
+    private Old_Man Old_man;
     
  
   public void settings() {
@@ -48,7 +55,11 @@ public class MySketch extends PApplet {
     Arrow = new Image_Class(this, 440, 170, "images/Arrow.png");
     Middle_Town = loadImage("images/Middle_Town.png");
     Defeat_Villager = loadImage("images/Defeat_Villager.png");
+    Normal_Villager = loadImage("images/Villager.png");
     Destroy_Back = loadImage("images/Destroy_Back.png");
+    Right_Arrow = new Image_Class(this, 460, 530, "images/Right_Arrow.png");
+    CutScene_Back = loadImage("images/CutScene_Back.jpg");
+    
     
     Arrow_Wheat = new Image_Class(this, 110, 275, "images/Arrow.png");
     Arrow_Bamboo = new Image_Class(this, 450, 380, "images/Arrow.png");
@@ -65,6 +76,7 @@ public class MySketch extends PApplet {
     Wheat = new Image_Class(this, 315, 350, "images/Wheat.png");
     
     nian = new Nian(this, 20, 30, "Nian", 10000, 10, "images/Nian.png", 10);
+    Old_man = new Old_Man(this, 0, 300, "Wise Man", 1000, 5, "images/Old_Man.png", 10);
   }
   
   public void keyPressed(){
@@ -76,6 +88,12 @@ public class MySketch extends PApplet {
         } else if (key != CODED){
             userInput += key;
         }
+    } else if (stage == 1 && keyCode == ENTER){
+        stage = 2;
+    } else if (stage == 2 && keyCode == ENTER){
+        stage = 3;
+    } else if (stage == 3 && keyCode == ENTER){
+        stage = 4;
     }
   }
   
@@ -90,8 +108,84 @@ public class MySketch extends PApplet {
         textSize(30);
         text("Enter Name: ", 180, 460);
         text(userInput, 340, 460);
-
+        
     } else if (stage == 1){
+        background(menu_image);
+        textSize(30);
+        text("Click Enter to continue", 150, 490);
+        
+        int count = 0;
+        //Try-catch block to catch ioException error
+        try {
+        //Use scanner to read input from file
+        Scanner fileInput = new Scanner( new File("Dialogue.txt") );
+        //while loop so that loop will occur if there is another line to read
+        while (fileInput.hasNext()){
+            String output = fileInput.nextLine();
+            if (count == 0){
+                textSize(30);
+                text(output, 110, 200, 400, 300);
+            }
+            count++;
+        }
+        //Close file
+        fileInput.close();
+        //Error message if exception caught
+        } catch ( IOException ioException ) {
+            System.err.println( "Java Exception: " + ioException);
+        } 
+    }else if (stage == 2){
+        background(menu_image);
+        textSize(30);
+        text("Click Enter to continue", 150, 490);
+        
+        int count = 0;
+        //Try-catch block to catch ioException error
+        try {
+        //Use scanner to read input from file
+        Scanner fileInput = new Scanner( new File("Dialogue.txt") );
+        //while loop so that loop will occur if there is another line to read
+        while (fileInput.hasNext()){
+            String output = fileInput.nextLine();
+            if (count == 1){
+                textSize(30);
+                text(output, 110, 200, 400, 300);
+            }
+            count++;
+        }
+        //Close file
+        fileInput.close();
+        //Error message if exception caught
+        } catch ( IOException ioException ) {
+            System.err.println( "Java Exception: " + ioException);
+        }
+    } else if (stage == 3){
+        background(menu_image);
+        textSize(30);
+        text("Click Enter to continue", 150, 490);
+        
+        int count = 0;
+        //Try-catch block to catch ioException error
+        try {
+        //Use scanner to read input from file
+        Scanner fileInput = new Scanner( new File("Dialogue.txt") );
+        //while loop so that loop will occur if there is another line to read
+        while (fileInput.hasNext()){
+            String output = fileInput.nextLine();
+            if (count == 2){
+                textSize(30);
+                text(output, 110, 200, 400, 300);
+            }
+            count++;
+        }
+        //Close file
+        fileInput.close();
+        //Error message if exception caught
+        } catch ( IOException ioException ) {
+            System.err.println( "Java Exception: " + ioException);
+        }
+
+    } else if (stage == 4){
         background(Scene1_Back);
         villager.draw();
         Soy.draw();
@@ -127,10 +221,10 @@ public class MySketch extends PApplet {
             if (villager.isCollidingWith(Arrow)){
                 villager.x = 270;
                 villager.y = 500;
-                stage = 2;
+                stage = 5;
             }
         }
-    } else if (stage == 2){
+    } else if (stage == 5){
         background(Storage_Room_Back);
         villager.draw();
         Arrow_Cabbage.draw();
@@ -185,11 +279,11 @@ public class MySketch extends PApplet {
             if (villager.isCollidingWith(Arrow)){
                 villager.x = 440;
                 villager.y = 170;
-                stage = 3;
+                stage = 6;
             }
         }
         
-    } else if (stage == 3){
+    } else if (stage == 6){
         background(Scene1_Back);
         villager.draw();
         Arrow.x = 20;
@@ -200,10 +294,10 @@ public class MySketch extends PApplet {
                 villager.y = 500;
                 nian.x = 230;
                 nian.y = 700;
-                stage = 4;
+                stage = 7;
             }
         
-    } else if (stage == 4){
+    } else if (stage == 7){
         background(Middle_Town);
         nian.draw();
         nian.move(0, -3);
@@ -212,9 +306,9 @@ public class MySketch extends PApplet {
             nian.y = 100;
             villager.x = 270;
             villager.y = 500;
-            stage = 5;
+            stage = 8;
         }
-    } else if (stage == 5){
+    } else if (stage == 8){
         background(Middle_Town);
         nian.draw();
         villager.draw();
@@ -223,7 +317,7 @@ public class MySketch extends PApplet {
         int NianY = 3;
         fill(255, 255, 255);
         textSize(50);
-        text("Villager HP: " + villager.health, 50, 50);
+        text("Villager HP: " + villager.health, 100, 50);
     
         if (nian.x < villager.x) {
             NianX = chaseSpeed;
@@ -244,26 +338,62 @@ public class MySketch extends PApplet {
         } 
         
         if (villager.health <= 0){
-            String name = userInput;
             villager.image = Defeat_Villager;
             chaseSpeed = 0;
             nian.move(0, 5);
         }
         
         if (nian.y > 700){
-            stage = 6;
+            stage = 9;
             nian.y = 170;
             nian.x = 0;
         }
-    } else if (stage == 6){
+    } else if (stage == 9){
         background(Scene1_Back);
         nian.draw();
         nian.move(5, 0);
         if (nian.x >= 440){
-            stage = 7;
+            stage = 10;
+            
         }
-    } else if (stage == 7){
+    } else if (stage == 10){
         background(Destroy_Back);
+        Right_Arrow.draw();
+        if (Right_Arrow.isClicked(mouseX, mouseY)){
+            stage = 11;
+            Right_Arrow.y = 450;
+        }
+    } else if (stage == 11){
+        background(CutScene_Back);
+        fill(255, 255, 255);
+        textSize(25);
+        text("Once again, the Nian have terrorized the town and \nstolen the crops. It seemed all hope was loss until...", 25, 250);
+        Right_Arrow.draw();
+        if (Right_Arrow.isClicked(mouseX, mouseY)){
+            stage = 12;
+            villager.x = 200;
+            villager.y = 300;
+            //Old_man.x = 0;
+            //Old_man.y = 300;
+        }
+    } else if (stage == 12){
+        background(Middle_Town);
+        villager.draw();
+        Old_man.draw();
+        //System.out.println(Old_man.x + ", " + Old_man.y);
+        
+        Old_man.move(2, 0);
+        //Old_man.x >= 200
+        if (Old_man.isCollidingWith(villager)){
+            System.out.println("Yes");
+            Old_man.move(0, 0);
+            villager.image = Normal_Villager;
+            fill(255, 255, 255);
+            textSize(30);
+            text("Wise Man: I know how to defeat the Nian!", 50, 500);
+        }
+        
+        
     }
 
     if (keyPressed) {
