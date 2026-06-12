@@ -26,6 +26,7 @@ public class Old_Man extends Person{
     }
     
     public void draw(){
+        app.image(image, x, y);
         if (Wisdom = true){
             this.message = "Nian fears the color red,\nloud firecrackers, and bright lights";
         }

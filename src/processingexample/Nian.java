@@ -4,6 +4,7 @@
  */
 package processingexample;
 import processing.core.PApplet;
+import processing.core.PImage;
 
 
 /**
@@ -12,6 +13,9 @@ import processing.core.PApplet;
  */
 public class Nian extends Person {
     private int power;
+    PImage Defeat_Villager;
+    private Nian nian;
+    private Villager villager;
     
     public Nian (PApplet p, int x, int y, String name, int health, int speed, String imagePath, int power){
         super(p, x, y, name, health, speed, imagePath);

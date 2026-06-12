@@ -8,13 +8,17 @@ import java.io.IOException;
 import java.util.Scanner;
 import processing.core.PApplet;
 import processing.core.PImage;
+import java.io.PrintWriter;
+import java.io.FileWriter;
 
 public class MySketch extends PApplet {
     private Nian nian;
     private Villager villager;
     public int stage = 0;
     private boolean showInfo = false;
-    String userInput = " ";
+    public static int Dialogue_Counter = 0;
+    public static String userInput = " ";
+    public boolean villager_defeat = false;
     //Images
     PImage menu_image;
     PImage Scene1_Back;
@@ -22,9 +26,17 @@ public class MySketch extends PApplet {
     PImage Middle_Town;
     PImage Defeat_Villager;
     PImage Destroy_Back;
-    PImage CutScene_Back;
     PImage Normal_Villager;
-    private Image_Class Right_Arrow;
+    PImage Villager_Flipped;
+    PImage Jungle;
+    PImage Attacked_Village;
+    PImage Attacked_Village2;
+    PImage Pre_Attack_Village;
+    PImage Jaguar_right;
+    PImage Jaguar_left;
+    PImage Nian_Flipped;
+    PImage nian_normal;
+    PImage Village2;
     private Image_Class Soy;
     private Image_Class Cabbage;
     private Image_Class Pepper;
@@ -39,8 +51,14 @@ public class MySketch extends PApplet {
     private Image_Class Arrow_Soy;
     private Image_Class Arrow_Cabbage;
     private Old_Man Old_man;
-    
- 
+    private Jaguar Jaguar;
+    private Jaguar Jaguar1;
+    private Jaguar Jaguar2;
+    private Jaguar Jaguar3;
+    private Jaguar Jaguar4;
+
+    String[][] dialogue = new String[7][2];
+
   public void settings() {
     size(600, 600);
   }
@@ -57,9 +75,14 @@ public class MySketch extends PApplet {
     Defeat_Villager = loadImage("images/Defeat_Villager.png");
     Normal_Villager = loadImage("images/Villager.png");
     Destroy_Back = loadImage("images/Destroy_Back.png");
-    Right_Arrow = new Image_Class(this, 460, 530, "images/Right_Arrow.png");
-    CutScene_Back = loadImage("images/CutScene_Back.jpg");
-    
+    Villager_Flipped = loadImage("images/Villager_Flipped.png");
+    Jungle = loadImage("images/Jungle.png");
+    Attacked_Village = loadImage("images/Attacked_Village.png");
+    Attacked_Village2 = loadImage("images/Attacked_Village2.jpeg");
+    Pre_Attack_Village = loadImage("images/Pre-Attack_Village.png");
+    Nian_Flipped = loadImage("images/Nian_Flip.png");
+    nian_normal = loadImage("images/Nian.png");
+    Village2 = loadImage("images/Village2.png");
     
     Arrow_Wheat = new Image_Class(this, 110, 275, "images/Arrow.png");
     Arrow_Bamboo = new Image_Class(this, 450, 380, "images/Arrow.png");
@@ -75,6 +98,15 @@ public class MySketch extends PApplet {
     Bamboo = new Image_Class(this, 200, 470, "images/Bamboo.png");
     Wheat = new Image_Class(this, 315, 350, "images/Wheat.png");
     
+    Jaguar_right = loadImage("images/Jaguar.png");
+    Jaguar_left = loadImage("images/Jaguar_Flipped.png");
+    
+    Jaguar  = new Jaguar(this, -5, 75,  Jaguar_left, Jaguar_right, 3, false);
+    Jaguar1 = new Jaguar(this, 600, 110, Jaguar_left, Jaguar_right, 2, true);
+    Jaguar2 = new Jaguar(this, -5, 200, Jaguar_left, Jaguar_right, 6, false);
+    Jaguar3 = new Jaguar(this, 600, 290, Jaguar_left, Jaguar_right, 5, true);
+    Jaguar4 = new Jaguar(this, -5, 380, Jaguar_left, Jaguar_right, 4, false);
+    
     nian = new Nian(this, 20, 30, "Nian", 10000, 10, "images/Nian.png", 10);
     Old_man = new Old_Man(this, 0, 300, "Wise Man", 1000, 5, "images/Old_Man.png", 10);
   }
@@ -85,6 +117,14 @@ public class MySketch extends PApplet {
             stage = 1;
             String name = userInput;
             villager = new Villager(this, 280, 500, name, 2000, 10, "images/Villager.png", 100);
+            dialogue[0] = new String[]{"Old Man: ", "I know how to defeat the Nian!"};
+            dialogue[1] = new String[]{villager.name + ": ", "How?"};
+            dialogue[2] = new String[]{"Old Man: ", "I heard that loud sounds and bright red colours scare it."};
+            dialogue[3] = new String[]{villager.name + ": ", "Really?"};
+            dialogue[4] = new String[]{"Old Man: ", "Yes!"};
+            dialogue[5] = new String[]{villager.name + ": ", "But how?"};
+            dialogue[6] = new String[]{"Old Man: ", "Use red paint, fire crackers and red lanterns. "
+                    + "You can find some in the nearby village across the forest. Hurry!"};
         } else if (key != CODED){
             userInput += key;
         }
@@ -94,8 +134,48 @@ public class MySketch extends PApplet {
         stage = 3;
     } else if (stage == 3 && keyCode == ENTER){
         stage = 4;
+    } else if (stage == 10 && keyCode == ENTER){
+        stage = 11;
+    } else if (stage == 11 && keyCode == ENTER){
+        stage = 12;
+    } else if (stage == 12 && Dialogue_Counter == 0 && keyCode == ENTER){
+        Dialogue_Counter++;
+    } else if (stage == 12 && Dialogue_Counter == 1 && keyCode == ENTER){
+        Dialogue_Counter++;
+    } else if (stage == 12 && Dialogue_Counter == 2 && keyCode == ENTER){
+        Dialogue_Counter++;
+    }  else if (stage == 12 && Dialogue_Counter == 3 && keyCode == ENTER){
+        Dialogue_Counter++;
+    } else if (stage == 12 && Dialogue_Counter == 4 && keyCode == ENTER){
+        Dialogue_Counter++;
+    } else if (stage == 12 && Dialogue_Counter == 5 && keyCode == ENTER){
+        Dialogue_Counter++;
+    } else if (stage == 12 && Dialogue_Counter == 6 && keyCode == ENTER){
+        stage = 13;
+        Dialogue_Counter = 0;
+    } else if (stage == 13 && keyCode == ENTER){
+        stage = 14;
+        villager.x = 270;
+        villager.y = 500;
+        Arrow.x = 250;
+        Arrow.y = 40;
     }
   }
+  
+  public void Record() {
+    try {
+        PrintWriter output = new PrintWriter(new FileWriter("Results.txt", true));
+        output.println("MC Name:" + userInput + ".  Stage reached: " + stage);
+        output.close();
+    } catch (IOException e) {
+        System.err.println("Error: " + e);
+    }
+    }
+  
+  public void exit() {
+    Record();
+    super.exit();
+    }
   
   public void draw() {  
     if (stage == 0){
@@ -110,9 +190,10 @@ public class MySketch extends PApplet {
         text(userInput, 340, 460);
         
     } else if (stage == 1){
-        background(menu_image);
+        background(Attacked_Village);
+        fill(255, 255, 255);
         textSize(30);
-        text("Click Enter to continue", 150, 490);
+        text("Click Enter to continue", 150, 50);
         
         int count = 0;
         //Try-catch block to catch ioException error
@@ -124,7 +205,7 @@ public class MySketch extends PApplet {
             String output = fileInput.nextLine();
             if (count == 0){
                 textSize(30);
-                text(output, 110, 200, 400, 300);
+                text(output, 60, 500, 500, 300);
             }
             count++;
         }
@@ -134,10 +215,11 @@ public class MySketch extends PApplet {
         } catch ( IOException ioException ) {
             System.err.println( "Java Exception: " + ioException);
         } 
-    }else if (stage == 2){
-        background(menu_image);
+    } else if (stage == 2){
+        background(Attacked_Village2);
+        fill(255, 255, 255);
         textSize(30);
-        text("Click Enter to continue", 150, 490);
+        text("Click Enter to continue", 150, 50);
         
         int count = 0;
         //Try-catch block to catch ioException error
@@ -149,7 +231,7 @@ public class MySketch extends PApplet {
             String output = fileInput.nextLine();
             if (count == 1){
                 textSize(30);
-                text(output, 110, 200, 400, 300);
+                text(output, 60, 500, 500, 300);
             }
             count++;
         }
@@ -158,11 +240,11 @@ public class MySketch extends PApplet {
         //Error message if exception caught
         } catch ( IOException ioException ) {
             System.err.println( "Java Exception: " + ioException);
-        }
+        }   
     } else if (stage == 3){
-        background(menu_image);
+        background(Pre_Attack_Village);
         textSize(30);
-        text("Click Enter to continue", 150, 490);
+        text("Click Enter to continue", 150, 50);
         
         int count = 0;
         //Try-catch block to catch ioException error
@@ -174,7 +256,7 @@ public class MySketch extends PApplet {
             String output = fileInput.nextLine();
             if (count == 2){
                 textSize(30);
-                text(output, 110, 200, 400, 300);
+                text(output, 110, 500, 400, 300);
             }
             count++;
         }
@@ -239,6 +321,11 @@ public class MySketch extends PApplet {
         Soy.draw();
         Bamboo.draw();
         Wheat.draw();
+        if (showInfo){
+            textSize(15);
+            fill(255, 255, 255);
+            villager.displayInfo(this);
+        }
         if (villager.isCollidingWith(Arrow_Hay)){
             Hay.x = 140;
             Hay.y = 145;
@@ -289,6 +376,11 @@ public class MySketch extends PApplet {
         Arrow.x = 20;
         Arrow.y = 20;
         Arrow.draw();
+        if (showInfo){
+            textSize(15);
+            fill(255, 255, 255);
+            villager.displayInfo(this);
+        }
         if (villager.isCollidingWith(Arrow)){
                 villager.x = 270;
                 villager.y = 500;
@@ -318,89 +410,181 @@ public class MySketch extends PApplet {
         fill(255, 255, 255);
         textSize(50);
         text("Villager HP: " + villager.health, 100, 50);
-    
+        if (showInfo){
+            textSize(15);
+            fill(255, 255, 255);
+            villager.displayInfo(this);
+        }
         if (nian.x < villager.x) {
             NianX = chaseSpeed;
+            nian.image = nian_normal;
         } else if (nian.x > villager.x) {
             NianX = -chaseSpeed;
+            nian.image = Nian_Flipped;
         }
-
         if (nian.y < villager.y) {
             NianY = chaseSpeed;
         } else if (nian.y > villager.y) {
             NianY = -chaseSpeed;
         }
-        
         nian.move(NianX, NianY);
-        
         if (villager.isCollidingWith(nian)){
             villager.health -= 10;
-        } 
-        
-        if (villager.health <= 0){
+        }
+        if (villager.health <= 450){
+            villager_defeat = true;
             villager.image = Defeat_Villager;
-            chaseSpeed = 0;
+            villager.move(0, 0);
+            nian.image = nian_normal;
             nian.move(0, 5);
         }
-        
         if (nian.y > 700){
             stage = 9;
             nian.y = 170;
             nian.x = 0;
+            villager_defeat = false;
         }
     } else if (stage == 9){
         background(Scene1_Back);
         nian.draw();
         nian.move(5, 0);
         if (nian.x >= 440){
-            stage = 10;
-            
+            stage = 10;      
         }
     } else if (stage == 10){
         background(Destroy_Back);
-        Right_Arrow.draw();
-        if (Right_Arrow.isClicked(mouseX, mouseY)){
-            stage = 11;
-            Right_Arrow.y = 450;
-        }
+        textSize(30);
+        text("Click Enter to continue", 150, 490);
     } else if (stage == 11){
-        background(CutScene_Back);
-        fill(255, 255, 255);
-        textSize(25);
-        text("Once again, the Nian have terrorized the town and \nstolen the crops. It seemed all hope was loss until...", 25, 250);
-        Right_Arrow.draw();
-        if (Right_Arrow.isClicked(mouseX, mouseY)){
-            stage = 12;
-            villager.x = 200;
-            villager.y = 300;
-            //Old_man.x = 0;
-            //Old_man.y = 300;
+        background(menu_image);
+        fill(0);
+        int count = 0;
+        //Try-catch block to catch ioException error
+        try {
+        //Use scanner to read input from file
+        Scanner fileInput = new Scanner( new File("Dialogue.txt") );
+        //while loop so that loop will occur if there is another line to read
+        while (fileInput.hasNext()){
+            String output = fileInput.nextLine();
+            if (count == 3){
+                textSize(30);
+                text(output, 110, 200, 400, 300);
+            }
+            count++;
         }
+        //Close file
+        fileInput.close();
+        //Error message if exception caught
+        } catch ( IOException ioException ) {
+            System.err.println( "Java Exception: " + ioException);
+        }
+        textSize(30);
+        text("Click Enter to continue", 150, 490);
+        villager.x = 200;
+            villager.y = 300;
+            Old_man.x = 0;
+            Old_man.y = 300;
     } else if (stage == 12){
         background(Middle_Town);
         villager.draw();
         Old_man.draw();
-        //System.out.println(Old_man.x + ", " + Old_man.y);
-        
         Old_man.move(2, 0);
-        //Old_man.x >= 200
-        if (Old_man.isCollidingWith(villager)){
-            System.out.println("Yes");
-            Old_man.move(0, 0);
-            villager.image = Normal_Villager;
+        textSize(30);
+        text("Click Enter to continue", 150, 50);
+        if (showInfo){
+            textSize(15);
             fill(255, 255, 255);
-            textSize(30);
-            text("Wise Man: I know how to defeat the Nian!", 50, 500);
+            villager.displayInfo(this);
+        }
+        if (Old_man.x >= 170){
+            Old_man.x = 170;
+            Old_man.y = 300;
+            villager.image = Villager_Flipped;;
+            if (Dialogue_Counter == 0){
+                fill(255, 255, 255);
+                textSize(30);
+                text(dialogue[0][0] + dialogue[0][1], 50, 500, 500, 300);
+            } else if (Dialogue_Counter == 1){
+                text(dialogue[1][0] + dialogue[1][1], 50, 500, 500, 300);
+            } else if (Dialogue_Counter == 2){
+                text(dialogue[2][0] + dialogue[2][1], 50, 500, 500, 300);
+            } else if (Dialogue_Counter == 3){
+                text(dialogue[3][0] + dialogue[3][1], 50, 500, 500, 300);
+            }  else if (Dialogue_Counter == 4){
+                text(dialogue[4][0] + dialogue[4][1], 50, 500, 500, 300);
+            } else if (Dialogue_Counter == 5){
+                text(dialogue[5][0] + dialogue[5][1], 50, 500, 500, 300);
+            } else if (Dialogue_Counter == 6){
+                text(dialogue[6][0] + dialogue[6][1], 50, 500, 500, 300);
+            }
+        }   
+    } else if (stage == 13){
+        background(Jungle);
+        textSize(30);
+        text("Click Enter to continue", 150, 50);
+        int count = 0;
+        //Try-catch block to catch ioException error
+        try {
+        //Use scanner to read input from file
+        Scanner fileInput = new Scanner( new File("Dialogue.txt") );
+        //while loop so that loop will occur if there is another line to read
+        while (fileInput.hasNext()){
+            String output = fileInput.nextLine();
+            if (count == 4){
+                textSize(30);
+                text(output, 110, 200, 400, 300);
+            }
+            count++;
+        }
+        //Close file
+        fileInput.close();
+        //Error message if exception caught
+        } catch ( IOException ioException ) {
+            System.err.println( "Java Exception: " + ioException);
+        }
+    } else if (stage == 14){
+        background(Jungle);
+        villager.draw();
+        Arrow.draw();
+        
+        Person[] Jaguars = {Jaguar, Jaguar1, Jaguar2, Jaguar3, Jaguar4};
+        for (Person j : Jaguars){
+            j.draw();
+            j.move(0, 0);
         }
         
+        if (villager.isCollidingWith(Jaguar) || villager.isCollidingWith(Jaguar1) || villager.isCollidingWith(Jaguar2)
+        || villager.isCollidingWith(Jaguar3) || villager.isCollidingWith(Jaguar4)){
+            villager.x = 270;
+            villager.y = 500;
+        }
         
+        if (villager.isCollidingWith(Arrow)){
+            stage = 15;
+            villager.x = 270;
+            villager.y = 500;
+            Arrow.x = 250;
+            Arrow.y = 240;
+        }
+        
+        if (showInfo){
+            textSize(15);
+            fill(255, 255, 255);
+            villager.displayInfo(this);
+        }
+    } else if (stage == 15){
+        background(Village2);
+        villager.draw();
+        Arrow.draw();
     }
 
-    if (keyPressed) {
+    if (keyPressed && villager_defeat == false) {
         if (keyCode == LEFT) {
           villager.move(-5, 0);
+          villager.image = Villager_Flipped;
         } else if (keyCode == RIGHT) {
           villager.move(5, 0);
+          villager.image = Normal_Villager;
         } else if (keyCode == UP) {
           villager.move(0, -5);
         } else if (keyCode == DOWN) {
@@ -410,7 +594,7 @@ public class MySketch extends PApplet {
   }
   
   public void mousePressed(){
-      if (villager.isClicked(mouseX, mouseY)){
+      if (villager.isClicked(mouseX, mouseY) && (stage >= 0)){
           showInfo = !showInfo;
       } else {
           showInfo = false;
